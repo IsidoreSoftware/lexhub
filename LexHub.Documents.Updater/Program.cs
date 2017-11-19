@@ -6,6 +6,8 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using System;
 using System.IO;
+using System.Runtime.CompilerServices;
+[assembly: InternalsVisibleTo("LexHub.Documents.Updater.Tests")]
 
 namespace LexHub.Documents.Updater
 {

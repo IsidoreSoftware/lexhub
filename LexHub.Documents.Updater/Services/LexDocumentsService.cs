@@ -4,45 +4,47 @@ using LexHub.Documents.Contract;
 using System.Net.Http;
 using LexHub.Documents.Updater.Options;
 using Microsoft.Extensions.Options;
+using LexHub.Documents.Models;
+using LexHub.Documents.Updater.Converters.Lex.Html;
 
 namespace LexHub.Documents.Updater.Services
 {
     class LexDocumentsService : IDocumentsService
     {
-        public LexDocumentsService(IOptions<LexDocuments> options)
+        private readonly IActBuilder<string> _actBuilder;
+        private readonly HttpClient _httpClient;
+
+        public LexDocumentsService(IOptions<LexDocuments> options, IActBuilder<string> actBuilder)
         {
-            httpClient = new HttpClient();
+            _actBuilder = actBuilder;
+            _httpClient = new HttpClient();
             Options = options.Value;
         }
 
-        private readonly HttpClient httpClient;
-
         public LexDocuments Options { get; }
 
-        public IEnumerable<Legislation> GetAllLegislations()
+        public IEnumerable<Act> GetAllLegislations()
         {
             throw new System.NotImplementedException();
         }
 
-        public Task<IEnumerable<Legislation>> GetAllLegislationsAsync()
+        public Task<IEnumerable<Act>> GetAllLegislationsAsync()
         {
             throw new System.NotImplementedException();
         }
 
-        public Legislation GetLegislation(string id)
+        public Act GetLegislation(string id)
         {
             return GetLegislationAsync(id).Result;
         }
 
-        public async Task<Legislation> GetLegislationAsync(string id)
+        public async Task<Act> GetLegislationAsync(string id)
         {
             var idParts = id.Split('.');
-            var result = await httpClient.GetAsync(string.Format(Options.UrlTemplate,$"20{idParts[2]}",idParts[3]));
-            return new Legislation
-            {
-                Version = id,
-                Content = await result.Content.ReadAsStringAsync(),
-            };
+            var result = await _httpClient.GetAsync(string.Format(Options.UrlTemplate, $"20{idParts[2]}", idParts[3]));
+            var doc = new HtmlToText(new []{ "Art.", "§", "[0-9][a-z]?\\)" });
+            var plainText = doc.ConvertHtml(await result.Content.ReadAsStringAsync());
+            return await _actBuilder.CreateLegislation(plainText);
         }
     }
 }

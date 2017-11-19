@@ -1,14 +1,15 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
+using LexHub.Documents.Models;
 
 namespace LexHub.Documents.Contract
 {
     public interface IDocumentsService
     {
-        IEnumerable<Legislation> GetAllLegislations();
-        Legislation GetLegislation(string id);
+        IEnumerable<Act> GetAllLegislations();
+        Act GetLegislation(string id);
 
-        Task<IEnumerable<Legislation>> GetAllLegislationsAsync();
-        Task<Legislation> GetLegislationAsync(string id);
+        Task<IEnumerable<Act>> GetAllLegislationsAsync();
+        Task<Act> GetLegislationAsync(string id);
     }
 }

@@ -1,8 +1,5 @@
 ﻿using LexHub.Documents.Contract;
 using Microsoft.Extensions.Logging;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace LexHub.Documents.Updater
 {
