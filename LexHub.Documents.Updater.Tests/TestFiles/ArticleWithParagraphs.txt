@@ -1,0 +1,5 @@
+﻿Art.  45. [Przedawnienie karalności i wykonania kary]
+§  1. 1 Karalność wykroczenia ustaje, jeżeli od czasu jego popełnienia upłynął rok; jeżeli w tym okresie wszczęto postępowanie, karalność wykroczenia ustaje z upływem 2 lat od zakończenia tego okresu.
+§  2. W razie uchylenia prawomocnego rozstrzygnięcia, przedawnienie biegnie od daty uchylenia rozstrzygnięcia.
+§  2a. W wypadku wszczęcia postępowania mediacyjnego czasu jego trwania nie wlicza się do okresu przedawnienia.
+§  3. Orzeczona kara lub środek karny nie podlega wykonaniu, jeżeli od daty uprawomocnienia się rozstrzygnięcia upłynęły 3 lata.

@@ -13,11 +13,45 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <None Remove="TestFiles\Heading.txt" />
+    <None Remove="TestFiles\Article.txt" />
+    <None Remove="TestFiles\ChapterWithSections.txt" />
+	  <None Remove="TestFiles\Heading.txt" />
+	  <None Remove="TestFiles\ParagraphWithPoints.txt" />
+	  <None Remove="TestFiles\ParagraphWithPointsAndContinuation.txt" />
+	  <None Remove="TestFiles\PartWithChapters.txt" />
+	  <None Remove="TestFiles\PointWithLetters.txt" />
+	  <None Remove="TestFiles\SectionWithArticles.txt" />
   </ItemGroup>
 
   <ItemGroup>
+    <Content Include="TestFiles\ArticleWithParagraphs.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="TestFiles\Article.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="TestFiles\ChapterWithSections.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <Content Include="TestFiles\Heading.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="TestFiles\ParagraphWithPoints.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="TestFiles\ParagraphWithPointsAndContinuation.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="TestFiles\LetterWithIndents.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="TestFiles\PartWithChapters.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="TestFiles\PointWithLetters.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="TestFiles\SectionWithArticles.txt">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
   </ItemGroup>
@@ -31,6 +65,12 @@
 
   <ItemGroup>
     <ProjectReference Include="..\LexHub.Documents.Updater\LexHub.Documents.Updater.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update="TestFiles\Paragraph.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
 
 </Project>

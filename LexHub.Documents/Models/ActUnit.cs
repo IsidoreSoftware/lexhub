@@ -5,7 +5,7 @@ namespace LexHub.Documents.Models
     public class ActUnit
     {
         public string Title { get; set; }
-        public string Text { get; set; }
+        public string Number { get; set; }
         public string Content { get; set; }
         public UnitType Type { get; set; }
         public IList<ActUnit> SubUnits { get; set; }

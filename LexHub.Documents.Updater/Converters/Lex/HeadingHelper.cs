@@ -2,16 +2,19 @@
 using System.Linq;
 using System.Text.RegularExpressions;
 using LexHub.Documents.Models;
+using LexHub.Documents.Updater.Converters.Lex.Parsers;
 
-namespace LexHub.Documents.Updater.Converters.Lex.Parsers
+namespace LexHub.Documents.Updater.Converters.Lex
 {
     internal static class HeadingHelper
     {
-        private const RegexOptions Options =
-            RegexOptions.IgnoreCase | RegexOptions.Singleline | RegexOptions.IgnorePatternWhitespace;
-
         internal static UnitType? GetTypeOfHeader(this string line)
         {
+            if (line == null)
+            {
+                return null;
+            }
+
             return MatchingDictionary
                 .FirstOrDefault(x => x.MatchingRule.IsMatch(line))?.MatchedType;
         }
@@ -26,52 +29,52 @@ namespace LexHub.Documents.Updater.Converters.Lex.Parsers
         {
             new MatchingPair
             {
-                MatchingRule = new Regex("^CZĘŚĆ",Options),
+                MatchingRule = new Regex(HeadingRegexPatterns.Part,HeadingRegexPatterns.Options),
                 MatchedType = UnitType.Part
             },
             new MatchingPair
             {
-                MatchingRule = new Regex("^KSIĘGA", Options),
+                MatchingRule = new Regex(HeadingRegexPatterns.Tome, HeadingRegexPatterns.Options),
                 MatchedType = UnitType.Tome
             },
             new MatchingPair
             {
-                MatchingRule = new Regex("^TYTUŁ", Options),
+                MatchingRule = new Regex(HeadingRegexPatterns.Title, HeadingRegexPatterns.Options),
                 MatchedType = UnitType.Title
             },
             new MatchingPair
             {
-                MatchingRule = new Regex("^DZIAŁ", Options),
+                MatchingRule = new Regex(HeadingRegexPatterns.Chapter, HeadingRegexPatterns.Options),
                 MatchedType = UnitType.Chapter
             },
             new MatchingPair
             {
-                MatchingRule = new Regex("^ROZDZIAŁ", Options),
+                MatchingRule = new Regex(HeadingRegexPatterns.Section, HeadingRegexPatterns.Options),
                 MatchedType = UnitType.Section
             },
             new MatchingPair
             {
-                MatchingRule = new Regex("^ART.", Options),
+                MatchingRule = new Regex(HeadingRegexPatterns.Article, HeadingRegexPatterns.Options),
                 MatchedType = UnitType.Article
             },
             new MatchingPair
             {
-                MatchingRule = new Regex("^§", Options),
-                MatchedType = UnitType.Paragrath
+                MatchingRule = new Regex(HeadingRegexPatterns.Paragraph, HeadingRegexPatterns.Options),
+                MatchedType = UnitType.Paragraph
             },
             new MatchingPair
             {
-                MatchingRule = new Regex("^[0-9]+\\)", Options),
+                MatchingRule = new Regex(HeadingRegexPatterns.Point, HeadingRegexPatterns.Options),
                 MatchedType = UnitType.Point
             },
             new MatchingPair
             {
-                MatchingRule = new Regex("^[a-z]\\)", Options),
+                MatchingRule = new Regex(HeadingRegexPatterns.Letter, HeadingRegexPatterns.Options),
                 MatchedType = UnitType.Letter
             },
             new MatchingPair
             {
-                MatchingRule = new Regex("^-", Options),
+                MatchingRule = new Regex(HeadingRegexPatterns.Indent, HeadingRegexPatterns.Options),
                 MatchedType = UnitType.Indent
             }
         };
