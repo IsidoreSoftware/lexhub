@@ -10,20 +10,25 @@ namespace LexHub.Documents.Updater.Converters.Lex.Parsers
 {
     class HeaderParser : IMetaDataParser
     {
-        public async Task<Act> GetMetaData<T>(T source)
+        public async Task<Act> GetMetaData(TextReader source)
         {
-            var toParse = source as string;
-            if (toParse == null)
-            {
-                throw new ArgumentException("This parser supports only string as a parameter");
-            }
-
-            if (string.IsNullOrWhiteSpace(toParse))
+            if (source == null)
             {
                 return null;
             }
 
-            return await CreateBaseAct<T>(toParse);
+            Act newAct = new Act();
+            string line;
+            foreach (var func in _assigmentsList)
+            {
+                do
+                {
+                    line = source.ReadLine();
+                } while (String.IsNullOrWhiteSpace(line) && source.Peek() != -1);
+                newAct = func(line, newAct);
+            }
+
+            return newAct;
         }
 
         private IList<Func<string, Act, Act>> _assigmentsList = new List<Func<string, Act, Act>>
@@ -34,24 +39,7 @@ namespace LexHub.Documents.Updater.Converters.Lex.Parsers
             SetName
         };
 
-        private static readonly Regex DateRegex = new Regex("^z dnia ([0-9]+) ([a-z]+) ([0-9]{4}) r.",RegexOptions.Singleline);
-
-        private async Task<Act> CreateBaseAct<T>(string toParse)
-        {
-            StringReader reader = new StringReader(toParse);
-            Act newAct = new Act();
-            string line;
-            foreach (var func in _assigmentsList)
-            {
-                do
-                {
-                    line = reader.ReadLine();
-                } while (String.IsNullOrWhiteSpace(line));
-                newAct = func(line, newAct);
-            }
-
-            return newAct;
-        }
+        private static readonly Regex DateRegex = new Regex("^z dnia ([0-9]+) ([a-z]+) ([0-9]{4}) r.", RegexOptions.Singleline);
 
         private static Act SetActId(string line, Act currentAct)
         {

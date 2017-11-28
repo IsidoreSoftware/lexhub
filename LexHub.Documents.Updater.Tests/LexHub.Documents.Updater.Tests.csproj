@@ -68,6 +68,9 @@
   </ItemGroup>
 
   <ItemGroup>
+    <None Update="TestFiles\FullAct.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <None Update="TestFiles\Paragraph.txt">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>

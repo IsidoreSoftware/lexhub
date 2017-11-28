@@ -8,6 +8,7 @@ using System;
 using System.IO;
 using System.Runtime.CompilerServices;
 [assembly: InternalsVisibleTo("LexHub.Documents.Updater.Tests")]
+[assembly: InternalsVisibleTo("DynamicProxyGenAssembly2")]
 
 namespace LexHub.Documents.Updater
 {

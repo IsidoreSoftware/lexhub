@@ -6,6 +6,11 @@ namespace LexHub.Documents.Updater.Converters.Lex
 {
     class ParserFactory : IParserFactory
     {
+        public ParserFactory()
+        {
+            TopLevelParser = new PartParser(this);
+        }
+
         public IUnitParser GetParser(UnitType type)
         {
             switch (type)
@@ -34,5 +39,7 @@ namespace LexHub.Documents.Updater.Converters.Lex
                     throw new NotImplementedException();
             }
         }
+
+        public IUnitParser TopLevelParser { get; }
     }
 }

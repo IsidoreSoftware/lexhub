@@ -6,6 +6,7 @@ using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using LexHub.Documents.Models;
+using LexHub.Documents.Updater.Converters.Lex.Exceptions;
 
 namespace LexHub.Documents.Updater.Converters.Lex.Parsers
 {
@@ -39,7 +40,7 @@ namespace LexHub.Documents.Updater.Converters.Lex.Parsers
                 };
             }
 
-            return null;
+            throw new ParserNotFitActualContentException(heading, this);
         }
 
         protected override HashSet<UnitType> PossibleSubUnits { get; }

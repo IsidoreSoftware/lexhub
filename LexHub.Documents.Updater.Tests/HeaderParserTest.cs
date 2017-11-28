@@ -14,28 +14,20 @@ namespace LexHub.Documents.Updater.Tests
 
         public HeaderParserTest()
         {
-            this._headerParser = new HeaderParser();
-        }
-
-        [Fact]
-        public async Task when_parameter_is_not_null_we_throw_exception()
-        {
-            await Assert.ThrowsAsync<ArgumentException>(() => _headerParser.GetMetaData(File.OpenRead(TestfilesHeadingTxt)));
+            _headerParser = new HeaderParser();
         }
 
         [Fact]
         public async Task EmptyTest()
         {
-            var result = await _headerParser.GetMetaData("");
+            var result = await _headerParser.GetMetaData(null);
             Assert.Null(result);
         }
 
         [Fact]
         public async Task parse_id_correctly()
         {
-            string text = File.ReadAllText(TestfilesHeadingTxt);
-
-            var result = await _headerParser.GetMetaData(text);
+            var result = await _headerParser.GetMetaData(File.OpenText(TestfilesHeadingTxt));
             Assert.Equal("Dz.U.17.1257", result.Id);
             Assert.Equal("Dz.U.17.1257", result.Version);
         }
@@ -43,18 +35,14 @@ namespace LexHub.Documents.Updater.Tests
         [Fact]
         public async Task parse_name_correctly()
         {
-            string text = File.ReadAllText(TestfilesHeadingTxt);
-
-            var result = await _headerParser.GetMetaData(text);
+            var result = await _headerParser.GetMetaData(File.OpenText(TestfilesHeadingTxt));
             Assert.Equal("Kodeks postępowania administracyjnego", result.Name);
         }
 
         [Fact]
         public async Task parse_date_correctly()
         {
-            string text = File.ReadAllText(TestfilesHeadingTxt);
-
-            var result = await _headerParser.GetMetaData(text);
+            var result = await _headerParser.GetMetaData(File.OpenText(TestfilesHeadingTxt));
             Assert.Equal(new DateTime(1960,6,14), result.CreationDate);
         }
 

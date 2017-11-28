@@ -50,6 +50,7 @@ namespace LexHub.Documents.Updater.Converters.Lex.Parsers
                 if (nextUnitType.HasValue && IsSubUnit(nextUnitType.Value))
                 {
                     var parser = _parserFactory.GetParser(nextUnitType.Value);
+
                     unit.SubUnits.Add(await parser.ParseUnit(line));
                 }
                 else
