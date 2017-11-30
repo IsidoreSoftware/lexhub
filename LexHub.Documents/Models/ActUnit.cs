@@ -4,6 +4,10 @@ namespace LexHub.Documents.Models
 {
     public class ActUnit
     {
+        public ActUnit()
+        {
+            SubUnits = new List<ActUnit>();
+        }
         public string Title { get; set; }
         public string Number { get; set; }
         public string Content { get; set; }

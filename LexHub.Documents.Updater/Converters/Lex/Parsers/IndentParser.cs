@@ -13,14 +13,15 @@ namespace LexHub.Documents.Updater.Converters.Lex.Parsers
             PossibleSubUnits = new HashSet<UnitType>();
         }
 
-        protected override async Task<ActUnit> ParseMetadata(StringReader source)
+        protected override async Task<ActUnit> ParseMetadata(StringReader source, string firstLine)
         {
-            await GetMetadataFromTheSingleLine(source, '-');
+            var text = await GetMetadataFromTheSingleLine(firstLine, '-');
             return new ActUnit
             {
                 Type = UnitType.Letter,
                 Title = String.Empty,
-                Number = ""
+                Number = "",
+                Content =  text
             };
         }
 

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using LexHub.Documents.Models;
@@ -16,70 +17,47 @@ namespace LexHub.Documents.Updater.Converters.Lex.Parsers
             _parserFactory = parserFactory;
         }
 
-        public async Task<ActUnit> ParseUnit<T>(T source)
+        public async Task<ActUnit> ParseUnit(StringReader source, string firstLine, ActUnit parrentUnit)
         {
-            var toParse = source as string;
-            if (toParse == null)
+            var currentUnit = await ParseMetadata(source, firstLine);
+            var contentBuilder = new StringBuilder(currentUnit.Content);
+            while (source.Peek()>=0)
             {
-                throw new ArgumentException("This parser supports only string as a parameter");
-            }
-            if (string.IsNullOrWhiteSpace(toParse))
-            {
-                return null;
-            }
-
-            var reader = new StringReader(toParse);
-            var unit = await ParseMetadata(reader);
-            var contentStringBuilder = new StringBuilder();
-            UnitType? nextUnitType;
-
-            if (unit.SubUnits == null)
-            {
-                unit.SubUnits = new List<ActUnit>();
-            }
-
-            do
-            {
-                var line = await reader.ReadLineAsync();
-                if (line==null)
+                var nextLine  = await source.ReadLineAsync();
+                if (nextLine.Trim() == String.Empty)
                 {
-                    break;
+                    continue;
                 }
 
-                nextUnitType = line.GetTypeOfHeader();
-                if (nextUnitType.HasValue && IsSubUnit(nextUnitType.Value))
+                var lineType = nextLine.GetTypeOfHeader();
+
+                if (lineType == null)
                 {
-                    var parser = _parserFactory.GetParser(nextUnitType.Value);
-
-                    unit.SubUnits.Add(await parser.ParseUnit(line));
+                    contentBuilder.AppendLine(nextLine);
+                    continue;
                 }
-                else
+
+                var parser = _parserFactory.GetParser(lineType.Value);
+                if (IsSubUnit(lineType.Value))
                 {
-                    contentStringBuilder.AppendLine(line);
+                    currentUnit.SubUnits.Add(await parser.ParseUnit(source, nextLine, currentUnit));
                 }
-            } while (!IsNextUnit(nextUnitType));
-
-            unit.Content = contentStringBuilder.ToString().Trim();
-
-            return unit;
+                else if(IsSibling(lineType.Value))
+                {
+                    parrentUnit.SubUnits.Add(await parser.ParseUnit(source, nextLine, parrentUnit));
+                }
+            }
+            currentUnit.Content = contentBuilder.ToString();
+            currentUnit.SubUnits = currentUnit.SubUnits.Reverse().ToList();
+            return currentUnit;
         }
 
-        protected static async Task<string> GetMetadataFromTheSingleLine(StringReader source, char endOfMetadataChar)
+        private bool IsSibling(UnitType lineTypeValue)
         {
-            var metadataStringBuilder = new StringBuilder();
-            var buffer = new char[1];
-
-            do
-            {
-                await source.ReadAsync(buffer, 0, 1);
-                metadataStringBuilder.Append(buffer[0]);
-            } while (buffer[0] != endOfMetadataChar && buffer[0] != '\0');
-
-            var header = metadataStringBuilder.ToString();
-            return header;
+            return this._parserFactory.GetParser(lineTypeValue).GetType() == this.GetType();
         }
 
-        protected abstract Task<ActUnit> ParseMetadata(StringReader source);
+        protected abstract Task<ActUnit> ParseMetadata(StringReader source, string firstLine);
 
         protected abstract HashSet<UnitType> PossibleSubUnits { get; }
 
@@ -91,6 +69,21 @@ namespace LexHub.Documents.Updater.Converters.Lex.Parsers
         private bool IsNextUnit(UnitType? type)
         {
             return type.HasValue && !IsSubUnit(type.Value);
+        }
+
+        protected static async Task<string> GetMetadataFromTheSingleLine(string line, char endOfMetadataChar)
+        {
+            var metadataStringBuilder = new StringBuilder();
+            var buffer = new char[1];
+            var lineReader = new StringReader(line);
+            do
+            {
+                await lineReader.ReadAsync(buffer, 0, 1);
+                metadataStringBuilder.Append(buffer[0]);
+            } while (buffer[0] != endOfMetadataChar && buffer[0] != '\0');
+
+            var header = metadataStringBuilder.ToString();
+            return header;
         }
     }
 }

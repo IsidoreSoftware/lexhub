@@ -16,9 +16,9 @@ namespace LexHub.Documents.Updater.Converters.Lex.Parsers
             };
         }
 
-        protected override async Task<ActUnit> ParseMetadata(StringReader source)
+        protected override async Task<ActUnit> ParseMetadata(StringReader source, string firstLine)
         {
-            var nameLine = await source.ReadLineAsync();
+            var nameLine = firstLine;
             var titleLine = await source.ReadLineAsync();
 
             var result = nameLine.Split(' ',StringSplitOptions.RemoveEmptyEntries);

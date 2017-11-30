@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Threading.Tasks;
 using LexHub.Documents.Contract;
@@ -33,7 +34,13 @@ namespace LexHub.Documents.Updater.Converters.Lex
             }
 
             var act = await _metaDataParser.GetMetaData(stream);
-            act.Content.Add(await _parserFactory.TopLevelParser.ParseUnit(await stream.ReadToEndAsync()));
+            var lookupLine = await stream.ReadLineAsync();
+            var baseUnit = new ActUnit();
+            act.Content = new List<ActUnit>
+            {
+                baseUnit
+            };
+            await _parserFactory.TopLevelParser.ParseUnit(stream, lookupLine, baseUnit);
 
             return act;
         }

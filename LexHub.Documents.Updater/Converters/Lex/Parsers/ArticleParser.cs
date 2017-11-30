@@ -23,10 +23,10 @@ namespace LexHub.Documents.Updater.Converters.Lex.Parsers
             });
         }
 
-        protected override async Task<ActUnit> ParseMetadata(StringReader source)
+        protected override async Task<ActUnit> ParseMetadata(StringReader source, string firstLine)
         {
             var actUnit = new ActUnit();
-            var heading = await source.ReadLineAsync();
+            var heading = firstLine;
             ParseHeading(heading, actUnit);
 
             return actUnit;

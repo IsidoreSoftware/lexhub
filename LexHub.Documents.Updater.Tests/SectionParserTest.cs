@@ -21,9 +21,9 @@ namespace LexHub.Documents.Updater.Tests
         [Fact]
         public async Task parse_point_with_sub_units()
         {
-            string text = File.ReadAllText(SectionWithArticlesFile);
-
-            var result = await _sectionParser.ParseUnit(text);
+            var text = new StringReader(File.ReadAllText(SectionWithArticlesFile));
+            var line = await text.ReadLineAsync();
+            var result = await _sectionParser.ParseUnit(text, line, new ActUnit());
 
             Assert.Equal("I", result.Number);
             Assert.Equal(UnitType.Section, result.Type);

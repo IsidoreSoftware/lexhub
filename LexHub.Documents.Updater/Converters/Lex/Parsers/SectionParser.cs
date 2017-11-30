@@ -21,9 +21,9 @@ namespace LexHub.Documents.Updater.Converters.Lex.Parsers
             _sectionRegex = new Regex(HeadingRegexPatterns.Section, HeadingRegexPatterns.Options);
         }
 
-        protected override async Task<ActUnit> ParseMetadata(StringReader source)
+        protected override async Task<ActUnit> ParseMetadata(StringReader source, string firstLine)
         {
-            var heading = await source.ReadLineAsync();
+            var heading = firstLine;
             var matches = _sectionRegex.Match(heading);
             var name = await source.ReadLineAsync();
             if (matches.Groups.Count == 2)

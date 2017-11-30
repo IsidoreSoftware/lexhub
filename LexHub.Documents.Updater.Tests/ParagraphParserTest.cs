@@ -22,9 +22,9 @@ namespace LexHub.Documents.Updater.Tests
         [Fact]
         public async Task parse_paragrath()
         {
-            string text = File.ReadAllText(ParagraphFile);
-
-            var result = await _articleParser.ParseUnit(text);
+            var text = new StringReader(File.ReadAllText(ParagraphFile));
+            var line = await text.ReadLineAsync();
+            var result = await _articleParser.ParseUnit(text, line, new ActUnit());
 
             Assert.Equal(String.Empty, result.Title);
             Assert.Equal(UnitType.Paragraph, result.Type);
@@ -37,9 +37,10 @@ namespace LexHub.Documents.Updater.Tests
         [Fact]
         public async Task parse_paragrath_with_sub_units()
         {
-            string text = File.ReadAllText(ParagraphWithPointsFile);
+            var text = new StringReader(File.ReadAllText(ParagraphWithPointsFile));
+            var line = await text.ReadLineAsync();
 
-            var result = await _articleParser.ParseUnit(text);
+            var result = await _articleParser.ParseUnit(text, line, new ActUnit());
 
             Assert.Equal(String.Empty, result.Title);
             Assert.Equal(UnitType.Paragraph, result.Type);

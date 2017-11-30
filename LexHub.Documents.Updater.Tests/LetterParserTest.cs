@@ -21,9 +21,10 @@ namespace LexHub.Documents.Updater.Tests
         [Fact]
         public async Task parse_point_with_sub_units()
         {
-            string text = File.ReadAllText(LettersWithIndents);
+            var stream= new StringReader(File.ReadAllText(LettersWithIndents));
+            var lineLookup = await stream.ReadLineAsync();
 
-            var result = await _letterParser.ParseUnit(text);
+            var result = await _letterParser.ParseUnit(stream, lineLookup, new ActUnit());
 
             Assert.Equal(String.Empty, result.Title);
             Assert.Equal(UnitType.Letter, result.Type);

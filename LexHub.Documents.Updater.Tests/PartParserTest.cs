@@ -21,9 +21,10 @@ namespace LexHub.Documents.Updater.Tests
         [Fact]
         public async Task parse_point_with_sub_units()
         {
-            string text = File.ReadAllText(PointWithLetters);
+            var reader = new StringReader(File.ReadAllText(PointWithLetters));
+            var line = await reader.ReadLineAsync();
 
-            var result = await _partParser.ParseUnit(text);
+            var result = await _partParser.ParseUnit(reader, line, new ActUnit());
 
             Assert.Equal("OGÓLNA", result.Title);
             Assert.Equal(UnitType.Part, result.Type);

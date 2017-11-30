@@ -20,35 +20,40 @@ namespace LexHub.Documents.Updater.Tests
         }
 
         [Fact]
-        public async Task not_string_source_throws_exception()
-        {
-            await Assert.ThrowsAsync<ArgumentException>(() =>
-                _articleParser.ParseUnit(File.OpenRead(TestfilesHeadingTxt)));
-        }
-
-        [Fact]
         public async Task parsed_correctly_simple_example()
         {
-            string text = File.ReadAllText(TestfilesHeadingTxt);
+            var stream = new StringReader(File.ReadAllText(TestfilesHeadingTxt));
+            var line = await stream.ReadLineAsync();
 
-            var result = await _articleParser.ParseUnit(text);
+            var result = await _articleParser.ParseUnit(stream, line, new ActUnit());
             Assert.Equal("Kara aresztu", result.Title);
             Assert.Equal(UnitType.Article, result.Type);
             Assert.Equal("19", result.Number);
-            Assert.Equal("Kara aresztu trwa najkrócej 5, najdłużej 30 dni; wymierza się ją w dniach.", result.Content);
+            Assert.Equal("Kara aresztu trwa najkrócej 5, najdłużej 30 dni; wymierza się ją w dniach.", result.Content.Trim());
         }
 
         [Fact]
         public async Task parse_article_with_paragraphs()
         {
-            string text = File.ReadAllText(ArticleWithParagrathFile);
+            var stream = new StringReader(File.ReadAllText(ArticleWithParagrathFile));
+            var line = await stream.ReadLineAsync();
 
-            var result = await _articleParser.ParseUnit(text);
+            var result = await _articleParser.ParseUnit(stream, line, new ActUnit());
             Assert.Equal("Przedawnienie karalności i wykonania kary", result.Title);
             Assert.Equal(UnitType.Article, result.Type);
             Assert.Equal("45", result.Number);
 
             Assert.Equal(4, result.SubUnits.Count);
+        }
+
+        [Fact]
+        public async Task parse_article_with_paragraphs_in_order()
+        {
+            var stream = new StringReader(File.ReadAllText(ArticleWithParagrathFile));
+            var line = await stream.ReadLineAsync();
+
+            var result = await _articleParser.ParseUnit(stream, line, new ActUnit());
+            Assert.Equal("1", result.SubUnits[0].Number);
         }
     }
 }
